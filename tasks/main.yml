@@ -1,0 +1,8 @@
+- name: put values
+  template: src=values.yml dest=/tmp/prom-statsd-{{ prom_statsd_helm_release }}.yml
+
+- name: get a repo
+  git: repo=https://github.com/alexclear/charts.git dest=/tmp/alexclear-charts
+
+- name: upgrade {{ prom_statsd_helm_release }} release using a Helm chart
+  shell: cd /tmp/alexclear-charts/incubator && helm upgrade {{ prom_statsd_helm_release }} prometheus-statsd-exporter --install --namespace {{ k8s_namespace }} -f /tmp/prom-statsd-{{ prom_statsd_helm_release }}.yml
